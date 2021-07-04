@@ -1,8 +1,11 @@
 package br.com.springboot.modules.users.infra.mem.repositories;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
+
+import com.fasterxml.uuid.Generators;
 
 import br.com.springboot.modules.users.dtos.CreateUserDTO;
 import br.com.springboot.modules.users.entities.User;
@@ -11,7 +14,7 @@ import br.com.springboot.modules.users.repositories.IUsersRepository;
 public class UsersRepository implements IUsersRepository {
 
 	static UsersRepository instance = null;
-	private ArrayList<User> users;
+	private List<User> users;
 
 	private UsersRepository() {
 		this.users = new ArrayList<>();
@@ -26,14 +29,14 @@ public class UsersRepository implements IUsersRepository {
 
 	@Override
 	public User create(CreateUserDTO data) {
-		User user = new User(Integer.toString(1 + this.users.size()), data.firstname, data.lastname, new Date(),
-				new Date());
+		User user = new User(Generators.randomBasedGenerator().generate().toString(), data.firstname, data.lastname,
+				new Date(), new Date());
 		this.users.add(user);
 		return user;
 	}
 
 	@Override
-	public ArrayList<User> all() {
+	public List<User> all() {
 		return this.users;
 	}
 

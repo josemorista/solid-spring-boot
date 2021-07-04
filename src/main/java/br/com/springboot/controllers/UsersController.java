@@ -1,6 +1,6 @@
 package br.com.springboot.controllers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,17 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.springboot.modules.users.dtos.CreateUserDTO;
 import br.com.springboot.modules.users.entities.User;
-import br.com.springboot.modules.users.infra.mem.repositories.UsersRepository;
 import br.com.springboot.modules.users.repositories.IUsersRepository;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
 
-	private IUsersRepository usersRepository = UsersRepository.getInstance();
+	private IUsersRepository usersRepository;
 
 	@GetMapping("/")
-	public ArrayList<User> index() {
+	public List<User> index() {
 		return this.usersRepository.all();
 	}
 
