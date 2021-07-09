@@ -14,4 +14,21 @@ import lombok.Setter;
 public class ApiError extends RuntimeException {
 	private HttpStatus status;
 	private String message;
+
+	private class ErrorResponseBody {
+		private String error;
+
+		public String getError() {
+			return error;
+		}
+
+		public ErrorResponseBody(String error) {
+			this.error = error;
+		}
+	}
+
+	public ErrorResponseBody getResponseBody() {
+		return new ErrorResponseBody(this.message);
+	}
+
 }

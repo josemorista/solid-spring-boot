@@ -22,13 +22,14 @@ import br.com.springboot.modules.users.repositories.IUsersRepository;
 import br.com.springboot.modules.users.useCases.CreateUserUseCase;
 import br.com.springboot.modules.users.useCases.GetUserByIdUseCase;
 import br.com.springboot.shared.exceptions.ApiError;
-import br.com.springboot.shared.exceptions.ErrorResponse;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
 	@Autowired
 	private IUsersRepository usersRepository;
+
+	private static final Gson gson = new Gson();
 
 	@GetMapping("/")
 	public List<User> index() {
@@ -47,8 +48,6 @@ public class UsersController {
 
 	@ExceptionHandler(ApiError.class)
 	public ResponseEntity<String> handleApiError(ApiError exception) {
-		Gson gson = new Gson();
-		ErrorResponse error = new ErrorResponse(exception.getMessage(), exception.getStatus());
-		return ResponseEntity.status(exception.getStatus()).body(gson.toJson(error));
+		return ResponseEntity.status(exception.getStatus()).body(UsersController.gson.toJson(exception.getResponseBody()));
 	}
 }
