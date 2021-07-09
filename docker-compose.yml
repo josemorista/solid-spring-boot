@@ -2,7 +2,7 @@ version: '3'
 
 services:
   postgres:
-    container_name: bm-postgres
+    container_name: solid-postgres
     image: postgres:latest
     environment:
       - POSTGRES_PASSWORD=docker

@@ -2,6 +2,8 @@ package br.com.springboot.controllers;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.springboot.modules.users.dtos.CreateUserDTO;
 import br.com.springboot.modules.users.entities.User;
+//import br.com.springboot.modules.users.infra.mem.repositories.UsersRepository;
+import br.com.springboot.modules.users.infra.pg.repositories.UsersRepository;
 import br.com.springboot.modules.users.repositories.IUsersRepository;
 import br.com.springboot.modules.users.useCases.CreateUserUseCase;
 import br.com.springboot.modules.users.useCases.GetUserByIdUseCase;
 import br.com.springboot.shared.exceptions.ApiError;
+import br.com.springboot.shared.exceptions.ErrorResponse;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
-
 	@Autowired
 	private IUsersRepository usersRepository;
 
@@ -38,11 +42,13 @@ public class UsersController {
 
 	@PostMapping("/")
 	public User store(@RequestBody CreateUserDTO body) {
-		return (new CreateUserUseCase(usersRepository).execute(body));
+		return (new CreateUserUseCase(this.usersRepository).execute(body));
 	}
 
 	@ExceptionHandler(ApiError.class)
 	public ResponseEntity<String> handleApiError(ApiError exception) {
-		return ResponseEntity.status(exception.getStatus()).body(exception.getMessage());
+		Gson gson = new Gson();
+		ErrorResponse error = new ErrorResponse(exception.getMessage(), exception.getStatus());
+		return ResponseEntity.status(exception.getStatus()).body(gson.toJson(error));
 	}
 }
